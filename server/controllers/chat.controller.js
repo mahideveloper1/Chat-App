@@ -1,11 +1,8 @@
-// server/controllers/chat.controller.js
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
-// @desc    Create or access one-to-one chat
-// @route   POST /api/chats/direct
-// @access  Private
+
 const accessOneToOneChat = async (req, res) => {
   const { userId } = req.body;
 
@@ -19,10 +16,8 @@ const accessOneToOneChat = async (req, res) => {
     let chat = await Chat.findOneToOneChat(req.user._id, userId);
 
     if (chat) {
-      // Chat exists, return it
       res.json(chat);
     } else {
-      // Chat doesn't exist, create a new one
       const targetUser = await User.findById(userId);
       
       if (!targetUser) {
@@ -54,9 +49,7 @@ const accessOneToOneChat = async (req, res) => {
   }
 };
 
-// @desc    Create group chat
-// @route   POST /api/chats/group
-// @access  Private
+
 const createGroupChat = async (req, res) => {
   if (!req.body.users || !req.body.name) {
     res.status(400);
@@ -65,7 +58,6 @@ const createGroupChat = async (req, res) => {
 
   let users = req.body.users;
 
-  // Parse the JSON string if it's not already an array
   if (typeof users === 'string') {
     try {
       users = JSON.parse(users);
@@ -101,12 +93,9 @@ const createGroupChat = async (req, res) => {
   }
 };
 
-// @desc    Get all chats for a user
-// @route   GET /api/chats
-// @access  Private
+
 const getUserChats = async (req, res) => {
   try {
-    // Find all chats that the user is part of
     const chats = await Chat.find({
       users: { $elemMatch: { $eq: req.user._id } }
     })
@@ -129,9 +118,7 @@ const getUserChats = async (req, res) => {
   }
 };
 
-// @desc    Get specific chat by ID
-// @route   GET /api/chats/:chatId
-// @access  Private
+
 const getChatById = async (req, res) => {
   try {
     const chat = await Chat.findById(req.params.chatId)
@@ -174,9 +161,7 @@ const getChatById = async (req, res) => {
   }
 };
 
-// @desc    Update group chat
-// @route   PUT /api/chats/group/:chatId
-// @access  Private
+
 const updateGroupChat = async (req, res) => {
   const { chatId } = req.params;
   const { name, users } = req.body;
@@ -260,9 +245,6 @@ const updateGroupChat = async (req, res) => {
   }
 };
 
-// @desc    Add user to group chat
-// @route   PUT /api/chats/group/:chatId/add
-// @access  Private
 const addToGroup = async (req, res) => {
   const { chatId } = req.params;
   const { userId } = req.body;
@@ -300,10 +282,8 @@ const addToGroup = async (req, res) => {
     // Add the user to unreadCounts with 0 count
     chat.unreadCounts.push({ user: userId, count: 0 });
 
-    // Save the updated chat
     const updatedChat = await chat.save();
 
-    // Populate and return the updated chat
     const fullChat = await Chat.findById(updatedChat._id)
       .populate('users', '-password')
       .populate('admin', '-password');
@@ -316,9 +296,7 @@ const addToGroup = async (req, res) => {
   }
 };
 
-// @desc    Remove user from group chat
-// @route   PUT /api/chats/group/:chatId/remove
-// @access  Private
+
 const removeFromGroup = async (req, res) => {
   const { chatId } = req.params;
   const { userId } = req.body;
@@ -338,7 +316,6 @@ const removeFromGroup = async (req, res) => {
       throw new Error('This operation is only valid for group chats');
     }
 
-    // Check if the requestor is the admin or removing themselves
     if (chat.admin.toString() !== req.user._id.toString() && 
         userId !== req.user._id.toString()) {
       res.status(403);

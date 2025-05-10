@@ -1,11 +1,8 @@
-// server/controllers/auth.controller.js
 const User = require('../models/User');
 const { generateToken } = require('../utils/jwt.utils');
 const logger = require('../utils/logger');
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
+
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -23,7 +20,6 @@ const registerUser = async (req, res) => {
       throw new Error('User already exists');
     }
 
-    // Create new user
     const user = await User.create({
       username,
       email,
@@ -59,9 +55,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// @desc    Login user & get token
-// @route   POST /api/auth/login
-// @access  Public
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -71,7 +65,6 @@ const loginUser = async (req, res) => {
 
     // Check if user exists and password matches
     if (user && (await user.matchPassword(password))) {
-      // Update user status and device info
       user.status = 'online';
       
       // Check if device already exists in the devices array
@@ -80,10 +73,8 @@ const loginUser = async (req, res) => {
       );
 
       if (deviceExists) {
-        // Update last login time
         deviceExists.lastLogin = Date.now();
       } else {
-        // Add new device
         user.devices.push({
           deviceId: req.headers['user-agent'] || 'unknown',
           lastLogin: Date.now(),
@@ -112,9 +103,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Get current user profile
-// @route   GET /api/auth/me
-// @access  Private
+
 const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -138,9 +127,7 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-// @desc    Logout user
-// @route   POST /api/auth/logout
-// @access  Private
+
 const logoutUser = async (req, res) => {
   try {
     // Update user status to offline

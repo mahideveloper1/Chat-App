@@ -1,16 +1,13 @@
-// server/services/cache.service.js
 const redis = require('redis');
 const config = require('../config');
 const logger = require('../utils/logger');
 
-// Create Redis client
 let redisClient;
 let isRedisAvailable = false;
 
-// Fallback in-memory cache for when Redis is not available
 const memoryCache = new Map();
 
-// Initialize Redis client
+// Initializing Redis client
 const initRedis = async () => {
   try {
     redisClient = redis.createClient({

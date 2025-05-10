@@ -1,12 +1,9 @@
-// server/controllers/message.controller.js
 const Message = require('../models/Message');
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
-// @desc    Send a new message
-// @route   POST /api/messages
-// @access  Private
+
 const sendMessage = async (req, res) => {
   const { content, chatId, attachments } = req.body;
 
@@ -94,9 +91,7 @@ const sendMessage = async (req, res) => {
   }
 };
 
-// @desc    Get all messages for a chat
-// @route   GET /api/messages/:chatId
-// @access  Private
+
 const getChatMessages = async (req, res) => {
   const { chatId } = req.params;
   const { page = 1, limit = 50 } = req.query;
@@ -158,14 +153,11 @@ const getChatMessages = async (req, res) => {
   }
 };
 
-// @desc    Delete a message
-// @route   DELETE /api/messages/:messageId
-// @access  Private
+
 const deleteMessage = async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    // Find the message
     const message = await Message.findById(messageId);
     
     if (!message) {
@@ -198,9 +190,7 @@ const deleteMessage = async (req, res) => {
   }
 };
 
-// @desc    Edit a message
-// @route   PUT /api/messages/:messageId
-// @access  Private
+
 const editMessage = async (req, res) => {
   const { messageId } = req.params;
   const { content } = req.body;
@@ -259,9 +249,6 @@ const editMessage = async (req, res) => {
   }
 };
 
-// @desc    Add reaction to a message
-// @route   POST /api/messages/:messageId/react
-// @access  Private
 const addReaction = async (req, res) => {
   const { messageId } = req.params;
   const { emoji } = req.body;
@@ -330,9 +317,7 @@ const addReaction = async (req, res) => {
   }
 };
 
-// @desc    Mark message as read
-// @route   PUT /api/messages/:messageId/read
-// @access  Private
+
 const markAsRead = async (req, res) => {
   const { messageId } = req.params;
 
@@ -377,9 +362,7 @@ const markAsRead = async (req, res) => {
   }
 };
 
-// @desc    Mark message as delivered
-// @route   PUT /api/messages/:messageId/deliver
-// @access  Private
+
 const markAsDelivered = async (req, res) => {
   const { messageId } = req.params;
 

@@ -1,4 +1,3 @@
-// server/routes/chat.routes.js
 const express = require('express');
 const {
   accessOneToOneChat,

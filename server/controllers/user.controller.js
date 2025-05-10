@@ -1,10 +1,7 @@
-// server/controllers/user.controller.js
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private
+
 const getUsers = async (req, res) => {
   try {
     const keyword = req.query.search
@@ -30,9 +27,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-// @desc    Update user status
-// @route   PUT /api/users/status
-// @access  Private
+
 const updateUserStatus = async (req, res) => {
   try {
     const { status } = req.body;

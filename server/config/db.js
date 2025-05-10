@@ -1,4 +1,3 @@
-// server/config/db.js
 const mongoose = require('mongoose');
 const config = require('./index');
 const logger = require('../utils/logger');

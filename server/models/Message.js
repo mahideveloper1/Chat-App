@@ -1,4 +1,3 @@
-// server/models/Message.js
 const mongoose = require('mongoose');
 
 const ReactionSchema = new mongoose.Schema({

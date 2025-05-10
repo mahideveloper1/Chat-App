@@ -1,4 +1,3 @@
-// server/routes/user.routes.js
 const express = require('express');
 const { getUsers, updateUserStatus } = require('../controllers/user.controller');
 const { protect } = require('../middleware/auth.middleware');

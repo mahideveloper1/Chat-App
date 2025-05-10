@@ -1,4 +1,3 @@
-// server/routes/message.routes.js
 const express = require('express');
 const {
   sendMessage,

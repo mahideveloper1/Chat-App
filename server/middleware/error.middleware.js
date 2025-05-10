@@ -1,4 +1,3 @@
-// server/middleware/error.middleware.js
 const logger = require('../utils/logger');
 
 // Not found middleware

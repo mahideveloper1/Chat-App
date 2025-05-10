@@ -1,4 +1,3 @@
-// server/socket.js
 const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
@@ -8,7 +7,6 @@ const { verifyToken } = require('./utils/jwt.utils');
 const config = require('./config');
 const logger = require('./utils/logger');
 
-// Store active connections
 const activeConnections = new Map();
 
 // Initialize the socket server

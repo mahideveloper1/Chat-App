@@ -1,11 +1,10 @@
-// server/server.js
 const http = require('http');
 const app = require('./app');
 const socketIO = require('socket.io');
 const connectDB = require('./config/db');
 const config = require('./config');
 const logger = require('./utils/logger');
-const socket = require('./socket'); // Use direct socket implementation instead of service
+const socket = require('./socket'); 
 
 // Uncaught exception handler
 process.on('uncaughtException', (err) => {

@@ -1,4 +1,3 @@
-// server/utils/logger.js
 const winston = require('winston');
 const config = require('../config');
 
@@ -25,7 +24,6 @@ const logger = winston.createLogger({
   ],
 });
 
-// If we're in production, add file logging
 if (config.NODE_ENV === 'production') {
   logger.add(
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' })
