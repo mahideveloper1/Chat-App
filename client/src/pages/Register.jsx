@@ -9,7 +9,6 @@ const Register = () => {
   const { register, isAuthenticated, loading } = useAuth();
   const [registerError, setRegisterError] = useState(null);
 
-  // Define validation schema
   const validationSchema = Yup.object({
     username: Yup.string()
       .min(3, 'Username must be at least 3 characters')
@@ -26,7 +25,6 @@ const Register = () => {
       .required('Confirm password is required'),
   });
 
-  // Initialize formik
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -38,7 +36,6 @@ const Register = () => {
     onSubmit: async (values) => {
       try {
         setRegisterError(null);
-        // Remove confirmPassword before sending to API
         const { confirmPassword, ...userData } = values;
         await register(userData);
       } catch (error) {
@@ -49,7 +46,6 @@ const Register = () => {
     },
   });
 
-  // Redirect if already authenticated
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }

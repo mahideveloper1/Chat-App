@@ -39,7 +39,6 @@ const Navbar = ({ toggleSidebar }) => {
           </div>
           
           <div className="flex items-center">
-            {/* Profile dropdown */}
             <Menu as="div" className="ml-3 relative">
               <div>
                 <Menu.Button className="flex items-center gap-2 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">

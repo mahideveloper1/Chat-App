@@ -15,7 +15,6 @@ const StatusSelector = () => {
   const handleStatusChange = async (status) => {
     try {
       await updateStatus(status);
-      // Also update via socket for real-time status change
       updateUserStatus(status);
     } catch (error) {
       console.error('Failed to update status:', error);

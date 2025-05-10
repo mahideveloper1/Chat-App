@@ -5,7 +5,6 @@ import LoadingSpinner from '../common/LoadingSpinner';
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
-  // Show loading spinner while checking authentication
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -14,12 +13,10 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Render children if authenticated
   return children;
 };
 

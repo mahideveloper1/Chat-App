@@ -9,7 +9,6 @@ const Login = () => {
   const { login, isAuthenticated, loading } = useAuth();
   const [loginError, setLoginError] = useState(null);
 
-  // Define validation schema
   const validationSchema = Yup.object({
     email: Yup.string()
       .email('Invalid email address')
@@ -18,7 +17,6 @@ const Login = () => {
       .required('Password is required'),
   });
 
-  // Initialize formik
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -35,7 +33,6 @@ const Login = () => {
     },
   });
 
-  // Redirect if already authenticated
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }

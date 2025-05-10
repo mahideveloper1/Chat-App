@@ -10,12 +10,10 @@ const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // Handle sidebar toggle for mobile
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
-  // Close sidebar when chat is selected on mobile
   useEffect(() => {
     if (selectedChat && isMobileSidebarOpen) {
       setIsMobileSidebarOpen(false);
@@ -27,7 +25,6 @@ const Dashboard = () => {
       <Navbar toggleSidebar={toggleMobileSidebar} />
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <ChatSidebar 
           isOpen={isMobileSidebarOpen}
           onClose={() => setIsMobileSidebarOpen(false)}

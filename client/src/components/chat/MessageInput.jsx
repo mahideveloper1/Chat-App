@@ -12,7 +12,6 @@ const MessageInput = ({ onSendMessage, onTyping, typingUsers }) => {
     const value = e.target.value;
     setMessage(value);
     
-    // Trigger typing indicator
     if (value.trim()) {
       onTyping();
     }

@@ -40,21 +40,17 @@ const ChatBox = ({ chat }) => {
     };
   }, [chat._id]);
 
-  // Fetch messages when chat changes
   useEffect(() => {
     fetchMessages();
   }, [chat._id]);
 
-  // Set up socket listeners
   useEffect(() => {
-    // Listen for new messages
     const messageHandler = (message) => {
       if (message.chat._id === chat._id) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
     };
 
-    // Listen for typing indicators
     const typingHandler = ({ userId, chatId }) => {
       if (userId !== user._id && chatId === chat._id) {
         const username = getChatUserById(userId)?.username || 'Someone';
@@ -68,21 +64,18 @@ const ChatBox = ({ chat }) => {
       }
     };
 
-    // Listen for stop typing
     const stopTypingHandler = ({ userId, chatId }) => {
       if (chatId === chat._id) {
         setTypingUsers((prev) => prev.filter((user) => user.userId !== userId));
       }
     };
 
-    // Set up listeners
     onMessageReceived(messageHandler);
     onTyping(typingHandler);
     onStopTyping(stopTypingHandler);
 
     // Clean up
     return () => {
-      // Clean up typing timeouts
       if (throttleTypingRef.current) {
         clearTimeout(throttleTypingRef.current);
       }
@@ -93,14 +86,12 @@ const ChatBox = ({ chat }) => {
     };
   }, [chat._id, user._id]);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  // Get user from chat by id
   const getChatUserById = (userId) => {
     return chat.users.find((u) => u._id === userId);
   };
@@ -120,7 +111,6 @@ const ChatBox = ({ chat }) => {
     }
   };
 
-  // Load more messages (pagination)
   const loadMoreMessages = async () => {
     if (pagination.page >= pagination.pages) return;
     
@@ -128,7 +118,6 @@ const ChatBox = ({ chat }) => {
       const nextPage = pagination.page + 1;
       const { data } = await messageService.getChatMessages(chat._id, nextPage);
       
-      // Prepend older messages
       setMessages((prevMessages) => [...data.messages, ...prevMessages]);
       setPagination(data.pagination);
     } catch (error) {
@@ -141,19 +130,16 @@ const ChatBox = ({ chat }) => {
     if (!content.trim()) return;
     
     try {
-      // Send via REST API
       const { data } = await messageService.sendMessage({
         content,
         chatId: chat._id,
       });
       
-      // Also emit via socket for real-time
       emitMessage({
         content,
         chatId: chat._id,
       });
       
-      // Stop typing indicator
       sendStopTyping(chat._id);
       
       return data;
@@ -165,18 +151,14 @@ const ChatBox = ({ chat }) => {
 
   // Handle typing
   const handleTyping = () => {
-    // Don't send typing event if already throttled
     if (throttleTypingRef.current) return;
     
-    // Send typing event
     sendTyping(chat._id);
     
-    // Throttle typing event
     throttleTypingRef.current = setTimeout(() => {
       throttleTypingRef.current = null;
     }, 3000);
     
-    // Set timeout to stop typing
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
@@ -186,7 +168,6 @@ const ChatBox = ({ chat }) => {
     }, 5000);
   };
 
-  // Get chat name
   const getChatName = () => {
     if (chat.isGroupChat) {
       return chat.name;
@@ -196,7 +177,6 @@ const ChatBox = ({ chat }) => {
     return otherUser ? otherUser.username : 'Chat';
   };
 
-  // Get users for display in header
   const getChatUsers = () => {
     if (chat.isGroupChat) {
       return chat.users;

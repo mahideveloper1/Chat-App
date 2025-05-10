@@ -16,7 +16,6 @@ const CreateGroupChat = ({ onClose, onCreate, currentUserId }) => {
     fetchUsers();
   }, []);
 
-  // Fetch users when search query changes
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setSearchResults(users);
@@ -47,13 +46,11 @@ const CreateGroupChat = ({ onClose, onCreate, currentUserId }) => {
     }
   };
 
-  // Form validation schema
   const validationSchema = Yup.object({
     name: Yup.string().required('Group name is required').min(3, 'Group name must be at least 3 characters'),
     users: Yup.array().min(2, 'Please select at least 2 users for the group')
   });
 
-  // Initialize formik
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -61,7 +58,6 @@ const CreateGroupChat = ({ onClose, onCreate, currentUserId }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // Convert users array to string for API
       const userData = {
         name: values.name,
         users: selectedUsers.map(user => user._id)
@@ -74,11 +70,9 @@ const CreateGroupChat = ({ onClose, onCreate, currentUserId }) => {
   // Toggle user selection
   const toggleUserSelection = (user) => {
     if (selectedUsers.some(selectedUser => selectedUser._id === user._id)) {
-      // Remove user
       setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser._id !== user._id));
       formik.setFieldValue('users', formik.values.users.filter(id => id !== user._id));
     } else {
-      // Add user
       setSelectedUsers([...selectedUsers, user]);
       formik.setFieldValue('users', [...formik.values.users, user._id]);
     }
@@ -87,7 +81,6 @@ const CreateGroupChat = ({ onClose, onCreate, currentUserId }) => {
   return (
     <div className="fixed z-50 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={onClose}></div>
         </div>

@@ -13,7 +13,6 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
     return moment(timestamp).format('h:mm A');
   };
 
-  // Handle emoji selection for reaction
   const handleEmojiSelect = (emojiData) => {
     addReactionToMessage(message._id, emojiData.emoji);
     setShowEmojiPicker(false);
@@ -25,7 +24,6 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
     setShowEmojiPicker(!showEmojiPicker);
   };
 
-  // Group reactions by emoji
   const groupedReactions = message.reactions?.reduce((acc, reaction) => {
     if (!acc[reaction.emoji]) {
       acc[reaction.emoji] = [];
@@ -36,7 +34,7 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
 
   // Check message status
   const hasBeenRead = message.readBy?.length > 0;
-  const hasBeenDelivered = message.deliveredTo?.length > 1; // More than sender
+  const hasBeenDelivered = message.deliveredTo?.length > 1; 
 
   // Handle click outside emoji picker
   useEffect(() => {
@@ -66,7 +64,6 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
         
         {/* Message content */}
         <div className="flex items-end group">
-          {/* Avatar (only show for other's messages) */}
           {!isOwn && showSender && (
             <div className="flex-shrink-0 mr-2">
               <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-semibold">
@@ -109,7 +106,6 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
               )}
             </div>
             
-            {/* Edited indicator */}
             {message.isEdited && (
               <div className={`text-right text-xs ${isOwn ? 'text-primary-100' : 'text-gray-500'}`}>
                 (edited)
@@ -117,7 +113,6 @@ const Message = ({ message, isOwn, showSender, senderName }) => {
             )}
           </div>
           
-          {/* Reaction button */}
           {showReactions && (
             <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity relative">
               <button 

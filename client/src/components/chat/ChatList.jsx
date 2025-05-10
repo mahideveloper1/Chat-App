@@ -1,32 +1,25 @@
-import { useMemo } from 'react';
 import moment from 'moment';
 
 const ChatList = ({ chats, selectedChatId, onSelectChat, currentUserId }) => {
-  // Function to get chat name for one-on-one chats
   const getChatName = (chat) => {
-    // For group chats, use the group name
     if (chat.isGroupChat) {
       return chat.name;
     }
     
-    // For one-on-one chats, show the other user's name
     const otherUser = chat.users.find((user) => user._id !== currentUserId);
     return otherUser ? otherUser.username : 'Unknown User';
   };
 
   // Function to get avatar for chat
   const getChatAvatar = (chat) => {
-    // For group chats, return first letter of group name
     if (chat.isGroupChat) {
       return chat.name.charAt(0).toUpperCase();
     }
     
-    // For one-on-one chats, return first letter of other user's name
     const otherUser = chat.users.find((user) => user._id !== currentUserId);
     return otherUser ? otherUser.username.charAt(0).toUpperCase() : 'U';
   };
 
-  // Function to get user status for one-on-one chats
   const getChatStatus = (chat) => {
     if (chat.isGroupChat) {
       return null;
@@ -49,7 +42,6 @@ const ChatList = ({ chats, selectedChatId, onSelectChat, currentUserId }) => {
     return `${sender}${content.length > 30 ? content.substring(0, 30) + '...' : content}`;
   };
 
-  // Format timestamp
   const formatTime = (timestamp) => {
     if (!timestamp) return '';
     
@@ -57,16 +49,12 @@ const ChatList = ({ chats, selectedChatId, onSelectChat, currentUserId }) => {
     const now = moment();
     
     if (now.diff(messageDate, 'days') === 0) {
-      // Today, show time
       return messageDate.format('h:mm A');
     } else if (now.diff(messageDate, 'days') === 1) {
-      // Yesterday
       return 'Yesterday';
     } else if (now.diff(messageDate, 'days') < 7) {
-      // Within last week, show day name
       return messageDate.format('ddd');
     } else {
-      // Older, show date
       return messageDate.format('MM/DD/YY');
     }
   };

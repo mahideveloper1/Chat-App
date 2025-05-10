@@ -19,10 +19,8 @@ export const AuthProvider = ({ children }) => {
         try {
           setUser(JSON.parse(storedUser));
           
-          // Initialize socket connection with token
           initSocket(token);
           
-          // Verify token with server
           const { data } = await authService.getCurrentUser();
           setUser(data);
           
@@ -47,14 +45,11 @@ export const AuthProvider = ({ children }) => {
       
       const { data } = await authService.register(userData);
       
-      // Save auth info
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data));
       
-      // Set user state
       setUser(data);
       
-      // Initialize socket
       initSocket(data.token);
       
       return data;
@@ -74,14 +69,11 @@ export const AuthProvider = ({ children }) => {
       
       const { data } = await authService.login(credentials);
       
-      // Save auth info
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data));
       
-      // Set user state
       setUser(data);
       
-      // Initialize socket
       initSocket(data.token);
       
       return data;
@@ -98,14 +90,12 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // Call logout API
       if (user) {
         await authService.logout();
       }
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Clean up regardless of API call success
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
@@ -119,7 +109,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data } = await authService.updateStatus(status);
       
-      // Update user in state and localStorage
       const updatedUser = { ...user, status };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));

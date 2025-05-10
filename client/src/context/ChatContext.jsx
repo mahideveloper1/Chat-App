@@ -18,7 +18,6 @@ import {
   sendMessage,
   markMessageAsRead,
   markMessageAsDelivered,
-  addReactionToMessage
 } from '../services/socket';
 
 const ChatContext = createContext();
@@ -43,7 +42,6 @@ export const ChatProvider = ({ children }) => {
     pages: 1
   });
 
-  // Load chats when user is authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchChats();
@@ -60,7 +58,6 @@ export const ChatProvider = ({ children }) => {
     };
   }, [selectedChat]);
 
-  // Set up socket listeners
   const setupSocketListeners = useCallback(() => {
     try {
       const socket = getSocket();
@@ -74,12 +71,10 @@ export const ChatProvider = ({ children }) => {
           // Mark as delivered
           markMessageAsDelivered(message._id);
           
-          // If from someone else, mark as read
           if (message.sender._id !== user._id) {
             markMessageAsRead(message._id);
           }
         } else {
-          // Update unread messages count for other chats
           setUnreadMessages((prev) => ({
             ...prev,
             [message.chat._id]: (prev[message.chat._id] || 0) + 1
@@ -93,7 +88,6 @@ export const ChatProvider = ({ children }) => {
           const chatIndex = prevChats.findIndex((c) => c._id === updatedChat._id);
           
           if (chatIndex !== -1) {
-            // Update existing chat
             const newChats = [...prevChats];
             newChats[chatIndex] = updatedChat;
             
@@ -153,7 +147,6 @@ export const ChatProvider = ({ children }) => {
         });
       });
 
-      // Listen for message status updates
       onMessageDeliveryUpdated(({ messageId, deliveredTo }) => {
         setMessages((prevMessages) => {
           return prevMessages.map((msg) => {
@@ -199,7 +192,6 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await chatService.getAllChats();
       
-      // Initialize online status for all users in chats
       const usersOnlineStatus = {};
       
       data.forEach((chat) => {
@@ -210,7 +202,6 @@ export const ChatProvider = ({ children }) => {
       
       setOnlineUsers(usersOnlineStatus);
       
-      // Sort chats with latest message first
       const sortedChats = data.sort((a, b) => {
         const aDate = a.lastMessage ? new Date(a.lastMessage.createdAt) : new Date(a.updatedAt);
         const bDate = b.lastMessage ? new Date(b.lastMessage.createdAt) : new Date(b.updatedAt);
@@ -226,7 +217,6 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  // Fetch messages for selected chat
   const fetchMessages = async (chatId, page = 1) => {
     if (!chatId) return;
     
@@ -237,17 +227,13 @@ export const ChatProvider = ({ children }) => {
       const { data } = await messageService.getChatMessages(chatId, page);
       
       if (page === 1) {
-        // First page - replace messages
         setMessages(data.messages);
       } else {
-        // Pagination - prepend older messages
         setMessages((prevMessages) => [...data.messages, ...prevMessages]);
       }
       
-      // Update pagination info
       setMessagesPagination(data.pagination);
       
-      // Reset unread count for this chat
       setUnreadMessages((prev) => ({ ...prev, [chatId]: 0 }));
       
       return data;
@@ -264,19 +250,15 @@ export const ChatProvider = ({ children }) => {
     if (selectedChat && selectedChat._id === chat._id) return;
     
     if (selectedChat) {
-      // Leave previous chat
       leaveChat(selectedChat._id);
     }
     
     setSelectedChat(chat);
     
-    // Join new chat
     joinChat(chat._id);
     
-    // Reset typing users for this chat
     setTypingUsers((prev) => ({ ...prev, [chat._id]: [] }));
     
-    // Fetch messages
     await fetchMessages(chat._id);
   };
 
@@ -288,7 +270,6 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await chatService.createDirectChat(userId);
       
-      // Check if chat already exists in state
       const chatExists = chats.some((c) => c._id === data._id);
       
       if (!chatExists) {
@@ -343,7 +324,6 @@ export const ChatProvider = ({ children }) => {
         });
       });
       
-      // Update selected chat if it's the one being updated
       if (selectedChat && selectedChat._id === chatId) {
         setSelectedChat(data);
       }
@@ -365,7 +345,6 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await chatService.addUserToGroup(chatId, userId);
       
-      // Update chats state
       setChats((prevChats) => {
         return prevChats.map((chat) => {
           if (chat._id === chatId) {
@@ -375,7 +354,6 @@ export const ChatProvider = ({ children }) => {
         });
       });
       
-      // Update selected chat if it's the one being updated
       if (selectedChat && selectedChat._id === chatId) {
         setSelectedChat(data);
       }
@@ -402,7 +380,6 @@ export const ChatProvider = ({ children }) => {
         // Remove chat from state
         setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
         
-        // Unselect chat if it's the one being deleted
         if (selectedChat && selectedChat._id === chatId) {
           setSelectedChat(null);
         }
@@ -439,7 +416,7 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  // Send a message
+  // message
   const sendNewMessage = async (content, chatId) => {
     try {
       const { data } = await messageService.sendMessage({
@@ -447,7 +424,6 @@ export const ChatProvider = ({ children }) => {
         chatId
       });
       
-      // Also send via socket for real-time updates
       sendMessage({
         content,
         chatId

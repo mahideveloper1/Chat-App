@@ -14,17 +14,14 @@ const ChatSidebar = ({ isOpen, onClose, onSelectChat, selectedChat }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch chats on mount
   useEffect(() => {
     fetchChats();
   }, []);
 
-  // Fetch all chats for the user
   const fetchChats = async () => {
     setLoading(true);
     try {
       const { data } = await chatService.getAllChats();
-      // Sort chats by most recent message
       const sortedChats = data.sort((a, b) => {
         const aDate = a.lastMessage ? new Date(a.lastMessage.createdAt) : new Date(a.updatedAt);
         const bDate = b.lastMessage ? new Date(b.lastMessage.createdAt) : new Date(b.updatedAt);
@@ -38,7 +35,6 @@ const ChatSidebar = ({ isOpen, onClose, onSelectChat, selectedChat }) => {
     }
   };
 
-  // Handle user search
   const handleSearch = async (query) => {
     if (query.trim() === '') {
       setSearchResults([]);
@@ -57,12 +53,10 @@ const ChatSidebar = ({ isOpen, onClose, onSelectChat, selectedChat }) => {
     }
   };
 
-  // Create or access one-to-one chat
   const accessChat = async (userId) => {
     try {
       const { data } = await chatService.createDirectChat(userId);
       
-      // Check if chat already exists in state
       if (!chats.find((c) => c._id === data._id)) {
         setChats((prevChats) => [data, ...prevChats]);
       }
@@ -128,7 +122,6 @@ const ChatSidebar = ({ isOpen, onClose, onSelectChat, selectedChat }) => {
             </div>
           </div>
 
-          {/* Search input */}
           <UserSearch 
             onSearch={handleSearch} 
             isSearching={isSearching}

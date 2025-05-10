@@ -2,7 +2,6 @@ import { io } from 'socket.io-client';
 
 let socket;
 
-// Initialize socket connection
 export const initSocket = (token) => {
   if (socket) {
     socket.disconnect();
@@ -28,7 +27,7 @@ export const initSocket = (token) => {
   return socket;
 };
 
-// Get socket instance
+// Get socket 
 export const getSocket = () => {
   if (!socket) {
     const token = localStorage.getItem('token');
